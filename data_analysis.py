@@ -18,13 +18,14 @@ recipes['protein'] = nutri_dataframe[4].astype(np.float64)
 recipes['sat_fat'] = nutri_dataframe[5].astype(np.float64)
 recipes['carbs'] = nutri_dataframe[6].astype(np.float64)
 
+recipes['minutes'] = recipes['minutes'].astype(np.float64)
 recipes['n_steps'] = recipes['n_steps'].astype(np.float64)
 recipes['n_ingredients'] = recipes['n_ingredients'].astype(np.float64)
 
-two_var = recipes[['n_steps', 'n_ingredients']]
+three_var = recipes[['minutes','n_steps', 'n_ingredients']]
 
-linear_model = LinearRegression().fit(two_var, recipes['calories'])
-print(linear_model.score(two_var, recipes['calories']))
+linear_model = LinearRegression().fit(three_var, recipes['calories'])
+print(linear_model.score(three_var, recipes['calories']))
 print(linear_model.coef_)
 print(linear_model.intercept_)
 

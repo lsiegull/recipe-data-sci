@@ -29,6 +29,57 @@ print(linear_model.score(three_var, recipes['calories']))
 print(linear_model.coef_)
 print(linear_model.intercept_)
 
-#tag_dummies = recipes['tags'].str.strip("[]").str.get_dummies(sep=",")
-#print(tag_dummies)
-#print(type(tag_dummies))
+tag_dict = dict()
+
+tags= recipes['tags'].str.strip("[]")
+for row in tags:
+    tag_str = row.split(",")
+    for t in tag_str:
+        if t in tag_dict:
+            tag_dict[t] = tag_dict[t] + 1
+        else:
+            tag_dict[t] = 1
+tag_vals = list(tag_dict.values())
+tag_vals.sort(reverse=True)
+
+top_five = tag_vals[0:15]
+for key in tag_dict.keys():
+    if tag_dict[key] in top_five:
+        print(key)
+        print(tag_dict[key])
+## removing all tags that are keys for something else
+tag_dummies = tags.str.get_dummies(sep=",")
+tag_dummies = tag_dummies[[' \'easy\'', ' \'dietary\'', ' \'main-dish\'', ' \'low-in-something\'', ' \'meat\'', ' \'vegetables\'']]
+
+recipes['easy'] = tag_dummies[' \'easy\'']
+recipes['dietary'] = tag_dummies[' \'dietary\'']
+recipes['main-dish'] = tag_dummies[' \'main-dish\'']
+recipes['low-in-something'] = tag_dummies[' \'low-in-something\'']
+recipes['meat'] = tag_dummies[' \'meat\'']
+recipes['vegetables'] = tag_dummies[' \'vegetables\'']
+
+nine_var = recipes[['minutes','n_steps', 'n_ingredients', 'easy', 'dietary', 'main-dish', 'low-in-something', 'meat', 'vegetables']]
+
+print("Calories Model")
+linear_with_dummy_vars = LinearRegression().fit(nine_var, recipes['calories'])
+print(linear_with_dummy_vars.score(nine_var, recipes['calories']))
+print(linear_with_dummy_vars.coef_)
+print(linear_with_dummy_vars.intercept_)
+
+print("Protein Model")
+ldv_protein = LinearRegression().fit(nine_var, recipes['protein'])
+print(ldv_protein.score(nine_var, recipes['protein']))
+print(ldv_protein.coef_)
+print(ldv_protein.intercept_)
+
+print("Total Fat Model")
+ldv_tfat = LinearRegression().fit(nine_var, recipes['total_fat'])
+print(ldv_tfat.score(nine_var, recipes['total_fat']))
+print(ldv_tfat.coef_)
+print(ldv_tfat.intercept_)
+
+print("Carbs Model")
+ldv_carbs = LinearRegression().fit(nine_var, recipes['carbs'])
+print(ldv_carbs.score(nine_var, recipes['carbs']))
+print(ldv_carbs.coef_)
+print(ldv_carbs.intercept_)

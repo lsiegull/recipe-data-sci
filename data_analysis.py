@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
+from scipy import stats
+from regressors import stats
 
 recipes = pd.read_csv("RAW_recipes.csv")
 
@@ -66,11 +68,18 @@ print(linear_with_dummy_vars.score(nine_var, recipes['calories']))
 print(linear_with_dummy_vars.coef_)
 print(linear_with_dummy_vars.intercept_)
 
+print("\n=========== SUMMARY ===========")
+xlabels = nine_var.columns.values
+stats.summary(linear_with_dummy_vars, nine_var, recipes['calories'], xlabels)
+
 print("Protein Model")
 ldv_protein = LinearRegression().fit(nine_var, recipes['protein'])
 print(ldv_protein.score(nine_var, recipes['protein']))
 print(ldv_protein.coef_)
 print(ldv_protein.intercept_)
+
+print("\n=========== SUMMARY ===========")
+stats.summary(linear_with_dummy_vars, nine_var, recipes['protein'], xlabels)
 
 print("Total Fat Model")
 ldv_tfat = LinearRegression().fit(nine_var, recipes['total_fat'])
@@ -78,8 +87,16 @@ print(ldv_tfat.score(nine_var, recipes['total_fat']))
 print(ldv_tfat.coef_)
 print(ldv_tfat.intercept_)
 
+print("\n=========== SUMMARY ===========")
+stats.summary(linear_with_dummy_vars, nine_var, recipes['total_fat'], xlabels)
+
 print("Carbs Model")
 ldv_carbs = LinearRegression().fit(nine_var, recipes['carbs'])
 print(ldv_carbs.score(nine_var, recipes['carbs']))
 print(ldv_carbs.coef_)
 print(ldv_carbs.intercept_)
+
+print("\n=========== SUMMARY ===========")
+stats.summary(linear_with_dummy_vars, nine_var, recipes['carbs'], xlabels)
+
+## Ridge regression for the protein model

@@ -32,9 +32,14 @@ print(linear_model.score(three_var, recipes['calories']))
 print(linear_model.coef_)
 print(linear_model.intercept_)
 
+xlabels = three_var.columns.values
+print("\n=========== SUMMARY ===========")
+stats.summary(linear_model, three_var, recipes['calories'], xlabels)
+
 tag_dict = dict()
 
 tags= recipes['tags'].str.strip("[]")
+"""
 for row in tags:
     tag_str = row.split(",")
     for t in tag_str:
@@ -50,6 +55,8 @@ for key in tag_dict.keys():
     if tag_dict[key] in top_five:
         print(key)
         print(tag_dict[key])
+"""
+
 ## removing all tags that are keys for something else
 tag_dummies = tags.str.get_dummies(sep=",")
 tag_dummies = tag_dummies[[' \'easy\'', ' \'dietary\'', ' \'main-dish\'', ' \'low-in-something\'', ' \'meat\'', ' \'vegetables\'']]
@@ -102,7 +109,7 @@ stats.summary(ldv_carbs, nine_var, recipes['carbs'], xlabels)
 
 ## Ridge regression for the protein model
 
-n_samples, n_features = 100, 9
+n_samples, n_features = 1000, 9
 rng = np.random.RandomState(0)
 y_data = rng.randn(n_samples)
 x_data = rng.randn(n_samples, n_features)

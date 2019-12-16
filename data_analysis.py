@@ -33,12 +33,14 @@ print(linear_model.coef_)
 print(linear_model.intercept_)
 
 xlabels = three_var.columns.values
-print("\n=========== SUMMARY ===========")
+print("\n=========== SUMMARY for Three Var Calories Linear Regression ===========")
 stats.summary(linear_model, three_var, recipes['calories'], xlabels)
 
 tag_dict = dict()
 
 tags= recipes['tags'].str.strip("[]")
+
+## find top tags & remove ones that are keys for something else/aren't useful
 """
 for row in tags:
     tag_str = row.split(",")
@@ -57,7 +59,6 @@ for key in tag_dict.keys():
         print(tag_dict[key])
 """
 
-## removing all tags that are keys for something else
 tag_dummies = tags.str.get_dummies(sep=",")
 tag_dummies = tag_dummies[[' \'easy\'', ' \'dietary\'', ' \'main-dish\'', ' \'low-in-something\'', ' \'meat\'', ' \'vegetables\'']]
 
@@ -76,7 +77,7 @@ print(linear_with_dummy_vars.score(nine_var, recipes['calories']))
 print(linear_with_dummy_vars.coef_)
 print(linear_with_dummy_vars.intercept_)
 
-print("\n=========== SUMMARY ===========")
+print("\n=========== SUMMARY for Nine Var Calories Linear Regression ===========")
 xlabels = nine_var.columns.values
 stats.summary(linear_with_dummy_vars, nine_var, recipes['calories'], xlabels)
 
@@ -86,7 +87,7 @@ print(ldv_protein.score(nine_var, recipes['protein']))
 print(ldv_protein.coef_)
 print(ldv_protein.intercept_)
 
-print("\n=========== SUMMARY ===========")
+print("\n=========== SUMMARY for Protein Linear Regression ===========")
 stats.summary(ldv_protein, nine_var, recipes['protein'], xlabels)
 
 print("Total Fat Model")
@@ -95,7 +96,7 @@ print(ldv_tfat.score(nine_var, recipes['total_fat']))
 print(ldv_tfat.coef_)
 print(ldv_tfat.intercept_)
 
-print("\n=========== SUMMARY ===========")
+print("\n=========== SUMMARY for Total Fat Linear Regression ===========")
 stats.summary(ldv_tfat, nine_var, recipes['total_fat'], xlabels)
 
 print("Carbs Model")
@@ -104,12 +105,12 @@ print(ldv_carbs.score(nine_var, recipes['carbs']))
 print(ldv_carbs.coef_)
 print(ldv_carbs.intercept_)
 
-print("\n=========== SUMMARY ===========")
+print("\n=========== SUMMARY for Carbs Linear Regression ===========")
 stats.summary(ldv_carbs, nine_var, recipes['carbs'], xlabels)
 
 ## Ridge regression for the protein model
 
-n_samples, n_features = 1000, 9
+n_samples, n_features = 2000, 9
 rng = np.random.RandomState(0)
 y_data = rng.randn(n_samples)
 x_data = rng.randn(n_samples, n_features)
@@ -117,5 +118,5 @@ rr_protein = Ridge(alpha = 1.0)
 rr_protein.fit(nine_var, recipes['protein'])
 rr_protein.score(nine_var, recipes['protein'])
 
-print("\n=========== SUMMARY ===========")
+print("\n=========== SUMMARY for Protein Ridge Regression ===========")
 stats.summary(rr_protein, nine_var, recipes['protein'], xlabels)

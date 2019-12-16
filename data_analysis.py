@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 from scipy import stats
 from regressors import stats
 
@@ -79,7 +80,7 @@ print(ldv_protein.coef_)
 print(ldv_protein.intercept_)
 
 print("\n=========== SUMMARY ===========")
-stats.summary(linear_with_dummy_vars, nine_var, recipes['protein'], xlabels)
+stats.summary(ldv_protein, nine_var, recipes['protein'], xlabels)
 
 print("Total Fat Model")
 ldv_tfat = LinearRegression().fit(nine_var, recipes['total_fat'])
@@ -88,7 +89,7 @@ print(ldv_tfat.coef_)
 print(ldv_tfat.intercept_)
 
 print("\n=========== SUMMARY ===========")
-stats.summary(linear_with_dummy_vars, nine_var, recipes['total_fat'], xlabels)
+stats.summary(ldv_tfat, nine_var, recipes['total_fat'], xlabels)
 
 print("Carbs Model")
 ldv_carbs = LinearRegression().fit(nine_var, recipes['carbs'])
@@ -97,6 +98,17 @@ print(ldv_carbs.coef_)
 print(ldv_carbs.intercept_)
 
 print("\n=========== SUMMARY ===========")
-stats.summary(linear_with_dummy_vars, nine_var, recipes['carbs'], xlabels)
+stats.summary(ldv_carbs, nine_var, recipes['carbs'], xlabels)
 
 ## Ridge regression for the protein model
+
+n_samples, n_features = 100, 9
+rng = np.random.RandomState(0)
+y_data = rng.randn(n_samples)
+x_data = rng.randn(n_samples, n_features)
+rr_protein = Ridge(alpha = 1.0)
+rr_protein.fit(nine_var, recipes['protein'])
+rr_protein.score(nine_var, recipes['protein'])
+
+print("\n=========== SUMMARY ===========")
+stats.summary(rr_protein, nine_var, recipes['protein'], xlabels)
